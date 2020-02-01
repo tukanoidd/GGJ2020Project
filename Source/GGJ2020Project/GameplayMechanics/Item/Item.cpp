@@ -21,6 +21,8 @@ AItem::AItem()
 	InitialLocation = FVector::ZeroVector;
 
 	RunningTime = 0.f;
+
+	NameToShow = "Item";
 }
 
 // Called when the game starts or when spawned

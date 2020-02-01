@@ -25,6 +25,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 	override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items)
+	AActor* LastSeenItem;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items)
+	bool bLookingAtItem;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -36,10 +41,8 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle;
 	UInputComponent* InputComponent;
 
-	AActor* LastSeenItem;
 	UPrimitiveComponent* LastSeenItemComponent;
-	bool bLookingAtItem;
-
+	
 	AActor* GrabbedActor;
 	UPrimitiveComponent* GrabbedComponent;
 	FVector LineStartLocation;

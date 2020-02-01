@@ -25,7 +25,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = Floating)
 	bool bIsFloating;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Item)
+	FString NameToShow;
+
 	FVector InitialLocation;
+
 
 protected:
 	// Called when the game starts or when spawned

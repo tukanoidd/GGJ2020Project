@@ -45,6 +45,8 @@ AMainCharacter::AMainCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = RunningSpeed;
 	GetCharacterMovement()->JumpZVelocity = JumpVelocity;
 	GetCharacterMovement()->AirControl = AirControl;
+
+	bInRepairArea = false;
 }
 
 // Called when the game starts or when spawned

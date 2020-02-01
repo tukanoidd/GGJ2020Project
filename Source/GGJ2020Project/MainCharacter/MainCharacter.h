@@ -37,14 +37,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Camera)
 	UCameraComponent* Camera;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Grabbing)
+	UGrabber* GrabberComponent;
+
+	UPROPERTY(BlueprintReadOnly, Category = Repair)
+	bool bInRepairArea;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(VisibleDefaultsOnly, Category = Grabbing)
-	UGrabber* GrabberComponent;
-
 	/** Character body and world settings */
 	UPROPERTY(EditDefaultsOnly, Category = Character)
 	float Mass;
