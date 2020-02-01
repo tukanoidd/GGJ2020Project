@@ -11,7 +11,6 @@
 
 #include "Grabber.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class GGJ2020PROJECT_API UGrabber : public UActorComponent
 {
@@ -30,6 +29,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items)
 	bool bLookingAtItem;
 
+	void Release();
+
+	FORCEINLINE AActor* GetGrabbedActor() { return GrabbedActor; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -42,7 +45,7 @@ private:
 	UInputComponent* InputComponent;
 
 	UPrimitiveComponent* LastSeenItemComponent;
-	
+
 	AActor* GrabbedActor;
 	UPrimitiveComponent* GrabbedComponent;
 	FVector LineStartLocation;
@@ -54,7 +57,6 @@ private:
 
 	void CheckGrab();
 	void Grab();
-	void Release();
 
 	void UpdateGrabLocation();
 

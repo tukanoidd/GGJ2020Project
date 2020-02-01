@@ -4,6 +4,8 @@
 
 #include "GGJ2020Project/MainCharacter/MainCharacter.h"
 
+#include "GameFramework/PlayerController.h"
+
 // Sets default values
 ARepairableActor::ARepairableActor()
 {
@@ -14,9 +16,22 @@ ARepairableActor::ARepairableActor()
 	RootComponent = Mesh;
 	Mesh->SetMobility(EComponentMobility::Static);
 
+	RepairMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RepairMesh"));
+	RepairMesh->SetupAttachment(GetRootComponent());
+	RepairMesh->SetMobility(EComponentMobility::Static);
+
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	CollisionSphere->SetupAttachment(GetRootComponent());
 	CollisionSphere->SetMobility(EComponentMobility::Static);
+
+	ToolToUse = nullptr;
+
+	InteractionType = EInteractionType::EIT_Repair;
+	InteractionTarget = nullptr;
+
+	MainCharacter = nullptr;
+
+	NameOfRepairable = TEXT("");
 }
 
 // Called when the game starts or when spawned
@@ -24,8 +39,18 @@ void ARepairableActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	RepairMesh->SetVisibility(false);
+
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &ARepairableActor::OnOverlapBegin);
 	CollisionSphere->OnComponentEndOverlap.AddDynamic(this, &ARepairableActor::OnOverlapEnd);
+
+	MainCharacter = Cast<AMainCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+	if (MainCharacter)
+	{
+		UInputComponent* PlayerInputComponent = MainCharacter->InputComponent;
+		PlayerInputComponent->BindAction("Repair/Interact", IE_Pressed, this, &ARepairableActor::RepairInteract);
+	}
 }
 
 // Called every frame
@@ -38,10 +63,11 @@ void ARepairableActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 	const FHitResult& SweepResult)
 {
-	AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
-	if (MainCharacter)
+	AMainCharacter* MainCharacterCheck = Cast<AMainCharacter>(OtherActor);
+	if (MainCharacterCheck)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("In Repair Area"))
+		if (!MainCharacter) MainCharacter = MainCharacterCheck;
+		
 		MainCharacter->bInRepairArea = true;
 	}
 }
@@ -49,9 +75,51 @@ void ARepairableActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 void ARepairableActor::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
+	AMainCharacter* MainCharacterCheck = Cast<AMainCharacter>(OtherActor);
+	if (MainCharacterCheck)
+	{
+		MainCharacterCheck->bInRepairArea = false;
+	}
+}
+
+void ARepairableActor::RepairInteract()
+{
 	if (MainCharacter)
 	{
-		MainCharacter->bInRepairArea = false;
+		if (InteractionType == EInteractionType::EIT_Repair) Repair();
+		if (InteractionType == EInteractionType::EIT_Interact) Interact();
+	}
+}
+
+void ARepairableActor::Repair()
+{
+	if (MainCharacter->PhysicsHandleComponent)
+	{
+		AItem* ItemInHand = Cast<AItem>(MainCharacter->PhysicsHandleComponent->GetGrabbedComponent()->GetOwner());
+		
+		if (ItemInHand)
+		{
+			if (ItemInHand == ToolToUse)
+			{
+				MainCharacter->GrabberComponent->Release();
+				MainCharacter->GrabberComponent->GetGrabbedActor()->Destroy();
+
+				RepairMesh->SetVisibility(true);
+			}
+		}
+	}
+}
+
+void ARepairableActor::Interact()
+{
+	if (InteractionTarget && ToolToUse)
+	{
+		if (ToolToUse->NameToShow == "Crowbar")
+		{
+			InteractionTarget->GetStaticMeshComponent()->SetSimulatePhysics(true);
+			InteractionTarget->GetStaticMeshComponent()->SetMobility(EComponentMobility::Movable);
+			InteractionTarget->GetStaticMeshComponent()->SetEnableGravity(false);
+			InteractionTarget->GetStaticMeshComponent()->AddForce(FVector::UpVector * 50.f);
+		}
 	}
 }
