@@ -43,6 +43,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = Repair)
 	bool bInRepairArea;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Subtitles)
+	FString SubtitleText;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

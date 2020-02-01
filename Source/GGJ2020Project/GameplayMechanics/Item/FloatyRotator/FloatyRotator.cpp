@@ -32,9 +32,9 @@ void UFloatyRotator::BeginPlay()
 		ActorMesh->SetEnableGravity(false);
 		
 		RotationForce = FRotator(
-			FMath::FRandRange(0, MaxForcePower),
-			FMath::FRandRange(0, MaxForcePower),
-			FMath::FRandRange(0, MaxForcePower)
+			FMath::FRandRange(30, MaxForcePower),
+			FMath::FRandRange(30, MaxForcePower),
+			FMath::FRandRange(30, MaxForcePower)
 		);
 	}
 }

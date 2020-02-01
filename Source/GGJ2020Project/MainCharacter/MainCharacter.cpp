@@ -47,6 +47,7 @@ AMainCharacter::AMainCharacter()
 	GetCharacterMovement()->AirControl = AirControl;
 
 	bInRepairArea = false;
+	SubtitleText = TEXT("");
 }
 
 // Called when the game starts or when spawned
