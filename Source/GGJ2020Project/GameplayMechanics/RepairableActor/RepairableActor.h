@@ -13,6 +13,9 @@
 #include "GGJ2020Project/GameplayMechanics/Item/Item.h"
 
 #include "Engine/StaticMeshActor.h"
+#include "Engine/TriggerBox.h"
+
+#include "Particles/ParticleSystemComponent.h"
 
 #include "RepairableActor.generated.h"
 
@@ -51,6 +54,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Collision)
 	USphereComponent* CollisionSphere;
 
+	UPROPERTY(EditDefaultsOnly, Category = Particles)
+	UParticleSystemComponent* ParticleSystem;
+
 	UPROPERTY(EditAnywhere, Category = Info)
 	AItem* ToolToUse;
 
@@ -63,8 +69,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = Info)
 	FString NameOfRepairable;
 
+	UPROPERTY(EditAnywhere, Category = Info)
+	ATriggerBox* SubtitleTriggerBox;
+
+	UPROPERTY()
 	AMainCharacter* MainCharacter;
-	
+
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 						int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

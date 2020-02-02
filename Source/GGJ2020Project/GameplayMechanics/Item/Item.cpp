@@ -11,6 +11,7 @@ AItem::AItem()
 	// Setup item mesh
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(GetRootComponent());
+	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
 
 	// Setup floating wave settings
 	Amplitude = 10.f;
