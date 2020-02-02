@@ -87,9 +87,6 @@ void UGrabber::Grab()
 	AItem* ItemToGrab = Cast<AItem>(LastSeenItem);
 	if (ItemToGrab) ItemToGrab->bIsFloating = false;
 
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *LastSeenItemComponent->GetName())
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GrabLocation.ToCompactString())
-
 	UMeshComponent* MeshToGrab = Cast<UMeshComponent>(LastSeenItemComponent);
 	if (MeshToGrab) MeshToGrab->SetEnableGravity(true);
 
@@ -142,7 +139,7 @@ void UGrabber::CheckLookingAtItem()
 		Hit,
 		LineStartLocation,
 		GrabLocation,
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldDynamic),
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		Params
 	);
 
